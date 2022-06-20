@@ -1,0 +1,16 @@
+{% extends "user/base.html" %}
+
+{% block title %}
+    Regístrese aquí.
+{% endblock %}
+
+{% block body %}
+
+    <form action="{% url 'user:register' %}" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Register">
+    </form>
+    <h3>¿Ya es miembro? Inicie sesión aquí.</h3>
+    <a href="{% url 'user:login' %}">Login</a>
+{% endblock %}
