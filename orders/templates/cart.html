@@ -1,0 +1,61 @@
+{% extends "orders/base.html" %}
+
+{% block title %}
+    Carrito
+{% endblock %}
+
+{% block body %}
+<h1>Aquí está su carrito</h1>
+    {% if pizzacart %}
+    {% for pizza in pizzacart %}
+        <div>{{ pizza.details }}</div>
+            
+        <form action="{% url 'orders:order' pizza_id=pizza.id %}" method="POST">
+            {% csrf_token %}
+            <select name="pizzacount">
+                <option selected>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+            </select>
+            <div>
+                <input type="checkbox" name="t&c" required><small>Estoy de acuerdo con los términos y condiciones y estoy listo para hacer un pedido.</small>
+            </div>
+            <input type="submit" value="Order Now">
+        </form>
+        
+        <form action="{% url 'orders:remove' pizza_id=pizza.id %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Remove from cart" style="float: right; margin: 0px 5% 5% 0px;">
+        </form>
+        <hr>
+    {% endfor %}
+        <hr>
+        
+        <h3>Precio total: $.{{ totalprice }}</h3>
+        <h4>Total de elementos: {{ pcl }}</h4>
+
+        <form action="{% url 'orders:orderall' %}" method="POST">
+            {% csrf_token %}
+            <div>
+                <input type="checkbox" name="T&C" required><small>Estoy de acuerdo con los Términos y Condiciones.</small>
+            </div>
+                <input type="submit" value="Order All Pizzas">
+        </form>
+
+        
+    <form action="{% url 'orders:removeall' %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Remove All" style="float: right; margin: 0px 5% 5% 0px;">   
+    </form>
+    {% else %}
+        <p>Su carrito está vacío.</p>
+        <p><a href="{% url 'orders:menu' %}">Haga clic aquí</a> para añadir artículos a su carrito.</p>
+    {% endif %}
+{% endblock %}

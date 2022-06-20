@@ -1,0 +1,49 @@
+{% extends "orders/base.html" %}
+
+{% block title %}
+    Sus pedidos
+{% endblock %}
+
+{% block body %}
+{% if orders %}
+<h1>Aquí están sus órdenes.</h1>
+    <table>
+        <tbody>
+            <tr>
+                <th> Detalles de la pizza |</th>
+                <th>Número de pizzas |</th>
+                <th> Total |</th>
+                <th> Estado |</th>
+            </tr>
+            {% for ordr in orders %}
+                <tr>
+                    <td>{{ ordr.pizzaname }}|  </td>
+                    <td>{{ ordr.count }}|   </td>
+                    <td>${{ ordr.total }}|  </td>
+                    <td>{{ ordr.status }}|</td>
+                    <td>
+                        {% if ordr.status != 'Delivered' %}
+                        <form action="{% url 'orders:cancelorder' order_id=ordr.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Cancel order">
+                        <small>NOTA: No puedes deshacer esta acción.</small>
+                    </form>
+                    {% else %}
+                    <form action="{% url 'orders:updateorder' user=ordr.pizzaname %}" method="POST">
+                        {% csrf_token %}
+                        <input type="checkbox" name="recieved" value="I recieved my order."><small>He recibido el pedido.</small>
+                        <input type="submit" value="Mark as recieved">
+                    </form>
+                    {% endif %}
+                </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+   
+    <hr>
+    <h3>Total: ${{ tp }}</h3>
+    {% else %}
+    <h3>No tienes órdenes.<a href="{% url 'orders:cart_items' %}">Haga clic aquí</a> para hacer un pedido.</h3>
+    {% endif %}
+{% endblock %}
